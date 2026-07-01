@@ -35,6 +35,11 @@ export async function signup(formData: FormData) {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
 
+  const headersList = await import('next/headers').then(m => m.headers());
+  const host = headersList.get('host') || 'localhost:3000';
+  const protocol = host.includes('localhost') || host.includes('192.168.') ? 'http' : 'https';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || `${protocol}://${host}`;
+
   const { error } = await supabase.auth.signUp({
     email,
     password,
@@ -43,6 +48,7 @@ export async function signup(formData: FormData) {
         // 기본 닉네임을 이메일 아이디 부분으로 설정
         username: email.split('@')[0],
       },
+      emailRedirectTo: `${siteUrl}/auth/callback`,
     },
   });
 

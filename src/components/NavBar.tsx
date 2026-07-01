@@ -65,16 +65,6 @@ export default async function NavBar() {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link href="/" className="text-sm font-medium text-zinc-600 hover:text-emerald-600 dark:text-zinc-300 dark:hover:text-emerald-400 transition-colors">
-              홈
-            </Link>
-            <Link href="/products" className="text-sm font-medium text-zinc-600 hover:text-emerald-600 dark:text-zinc-300 dark:hover:text-emerald-400 transition-colors">
-              곳간 채우기
-            </Link>
-            <Link href="/chat" className="relative text-sm font-medium text-zinc-600 hover:text-emerald-600 dark:text-zinc-300 dark:hover:text-emerald-400 transition-colors">
-              채팅
-              {user && <RealtimeChatBadge initialCount={unreadChatCount} userId={user.id} desktop={true} />}
-            </Link>
             {isAdmin && (
               <Link href="/admin" className="text-sm font-bold text-rose-500 hover:text-rose-600 transition-colors flex items-center gap-1">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
@@ -89,19 +79,19 @@ export default async function NavBar() {
           <div className="flex items-center space-x-4">
             {user ? (
               <>
-                {/* Mobile Chat Icon */}
-                <Link href="/chat" className="relative p-2 md:hidden text-zinc-500 hover:text-emerald-600 transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
-                  </svg>
-                  {user && <RealtimeChatBadge initialCount={unreadChatCount} userId={user.id} />}
-                </Link>
-
                 <Link href="/notifications" className="relative p-2 text-zinc-500 hover:text-emerald-600 transition-colors">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                   </svg>
                   {user && <RealtimeNotifBadge initialCount={unreadCount} userId={user.id} />}
+                </Link>
+
+                {/* Chat Icon (All screens) */}
+                <Link href="/chat" className="relative p-2 text-zinc-500 hover:text-emerald-600 transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+                  </svg>
+                  {user && <RealtimeChatBadge initialCount={unreadChatCount} userId={user.id} />}
                 </Link>
                 <Link href="/mypage" className="flex items-center p-2 md:p-0 text-zinc-500 hover:text-emerald-600 md:text-zinc-600 md:hover:text-zinc-900 dark:md:text-zinc-300 dark:md:hover:text-white transition-colors">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 md:hidden">
