@@ -23,9 +23,20 @@ export async function createOrJoinChatRoom(productId: string) {
     throw new Error('상품을 찾을 수 없습니다.');
   }
 
-  // 자신이 올린 상품이면 채팅 불가 (또는 나중에 방어 로직 추가)
+  // 자신이 올린 상품이면 채팅 불가
   if (product.seller_id === user.id) {
     throw new Error('자신이 등록한 상품에는 채팅을 할 수 없습니다.');
+  }
+
+  // 상호 차단 여부 확인
+  const { data: block } = await supabase
+    .from('blocks')
+    .select('id')
+    .or(`and(blocker_id.eq.${user.id},blocked_id.eq.${product.seller_id}),and(blocker_id.eq.${product.seller_id},blocked_id.eq.${user.id})`)
+    .single();
+
+  if (block) {
+    throw new Error('차단된 유저와는 채팅할 수 없습니다.');
   }
 
   // 이미 생성된 채팅방이 있는지 확인

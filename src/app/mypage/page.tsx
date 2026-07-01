@@ -4,6 +4,7 @@ import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
 import { logout } from '@/app/login/actions';
 import ProfileEditor from '@/components/ProfileEditor';
+import UnblockButton from './UnblockButton';
 
 export const revalidate = 0;
 
@@ -47,6 +48,24 @@ export default async function MyPage() {
       
     if (products) {
       likedProducts = pIds.map(id => products.find(p => p.id === id)).filter(Boolean);
+    }
+  }
+
+  // 차단한 사용자 목록 가져오기
+  const { data: blockedData } = await supabase
+    .from('blocks')
+    .select('blocked_id')
+    .eq('blocker_id', user.id);
+  
+  const blockedIds = blockedData?.map(row => row.blocked_id) || [];
+  let blockedUsers: any[] = [];
+  if (blockedIds.length > 0) {
+    const { data: bUsers } = await supabase
+      .from('profiles')
+      .select('id, username, avatar_url')
+      .in('id', blockedIds);
+    if (bUsers) {
+      blockedUsers = bUsers;
     }
   }
 
@@ -142,6 +161,41 @@ export default async function MyPage() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
             </svg>
             <p className="text-zinc-500 dark:text-zinc-400 font-medium">아직 찜한 상품이 없어요</p>
+          </div>
+        )}
+      </div>
+
+      {/* 차단 관리 */}
+      <div className="mt-16">
+        <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-6 flex items-center gap-2">
+          차단 관리 <span className="text-sm font-normal text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-2.5 py-0.5 rounded-full">{blockedUsers.length}명</span>
+        </h2>
+
+        {blockedUsers && blockedUsers.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {blockedUsers.map(user => (
+              <div key={user.id} className="flex items-center justify-between p-4 bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
+                <div className="flex items-center gap-3 overflow-hidden">
+                  <div className="w-10 h-10 rounded-full bg-zinc-200 dark:bg-zinc-800 flex-shrink-0 flex items-center justify-center font-bold text-zinc-500 overflow-hidden relative">
+                    {user.avatar_url ? (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img src={user.avatar_url} alt={user.username} className="w-full h-full object-cover" />
+                    ) : (
+                      user.username?.charAt(0).toUpperCase() || '?'
+                    )}
+                  </div>
+                  <span className="font-semibold text-zinc-900 dark:text-white truncate">{user.username}</span>
+                </div>
+                <UnblockButton userId={user.id} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12 rounded-3xl border-2 border-dashed border-zinc-200 dark:border-zinc-800">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor" className="w-12 h-12 text-zinc-300 dark:text-zinc-700 mx-auto mb-3">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+            </svg>
+            <p className="text-zinc-500 dark:text-zinc-400 font-medium">차단한 사용자가 없습니다</p>
           </div>
         )}
       </div>

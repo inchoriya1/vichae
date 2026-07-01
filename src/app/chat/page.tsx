@@ -27,12 +27,29 @@ export default async function ChatPage() {
     .or(`and(buyer_id.eq.${user.id},buyer_left.eq.false),and(seller_id.eq.${user.id},seller_left.eq.false)`)
     .order('last_message_at', { ascending: false });
 
-  // 채팅을 아직 한 마디도 안 했을 경우(last_message_at === null), 판매자에게는 노출되지 않도록 필터링
+  // 차단 내역 조회 (상호 차단 포함)
+  const { data: blocks } = await supabase
+    .from('blocks')
+    .select('blocker_id, blocked_id')
+    .or(`blocker_id.eq.${user.id},blocked_id.eq.${user.id}`);
+    
+  const blockedUserIds = new Set(
+    blocks?.map(b => b.blocker_id === user.id ? b.blocked_id : b.blocker_id) || []
+  );
+
+  // 채팅을 아직 한 마디도 안 했을 경우(last_message_at === null) 필터링, 그리고 차단된 유저 필터링
   const activeRooms = rooms?.filter((room: any) => {
     const isSeller = room.seller?.id === user.id;
     if (isSeller && !room.last_message_at) {
       return false;
     }
+    
+    // 파트너 ID 확인
+    const partnerId = isSeller ? room.buyer?.id : room.seller?.id;
+    if (partnerId && blockedUserIds.has(partnerId)) {
+      return false;
+    }
+    
     return true;
   }) || [];
 

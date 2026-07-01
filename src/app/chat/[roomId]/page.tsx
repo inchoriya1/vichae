@@ -42,6 +42,19 @@ export default async function ChatRoomPage({ params }: { params: Promise<{ roomI
 
   const partner = buyer?.id === user.id ? seller : buyer;
 
+  // 파트너와의 상호 차단 여부 확인
+  if (partner?.id) {
+    const { data: block } = await supabase
+      .from('blocks')
+      .select('id')
+      .or(`and(blocker_id.eq.${user.id},blocked_id.eq.${partner.id}),and(blocker_id.eq.${partner.id},blocked_id.eq.${user.id})`)
+      .single();
+      
+    if (block) {
+      redirect('/chat'); // 차단된 상태면 채팅 목록으로 강제 이동
+    }
+  }
+
   // 이전 메시지 내역 불러오기
   const { data: initialMessages } = await supabase
     .from('messages')
