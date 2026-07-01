@@ -111,8 +111,8 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
           {reviews && reviews.length > 0 ? (
             <div className="space-y-4">
               {reviews.map(review => {
-                const reviewer = review.reviewer as { username: string, avatar_url: string } | null;
-                const product = review.product as { title: string } | null;
+                const reviewer = review.reviewer as any as { username: string, avatar_url: string } | null;
+                const product = review.product as any as { title: string } | null;
                 
                 return (
                   <div key={review.id} className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 shadow-sm">

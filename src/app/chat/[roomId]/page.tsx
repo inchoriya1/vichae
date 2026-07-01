@@ -31,13 +31,16 @@ export default async function ChatRoomPage({ params }: { params: Promise<{ roomI
     notFound();
   }
 
+  // 대화 상대방 정보 결정
+  const buyer = room.buyer as any;
+  const seller = room.seller as any;
+
   // 본인이 참여한 방이 아니면 접근 차단
-  if (room.buyer?.id !== user.id && room.seller?.id !== user.id) {
+  if (buyer?.id !== user.id && seller?.id !== user.id) {
     redirect('/chat');
   }
 
-  // 대화 상대방 정보 결정
-  const partner = room.buyer?.id === user.id ? room.seller : room.buyer;
+  const partner = buyer?.id === user.id ? seller : buyer;
 
   // 이전 메시지 내역 불러오기
   const { data: initialMessages } = await supabase
@@ -69,33 +72,36 @@ export default async function ChatRoomPage({ params }: { params: Promise<{ roomI
       </div>
 
       {/* 상품 요약 바 */}
-      {room.product && (
-        <div className="flex items-center justify-between p-3 bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 gap-3">
-          <Link href={`/products/${room.product.id}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity flex-1 min-w-0">
-            {room.product.images?.[0] && (
-              <div className="w-12 h-12 rounded-lg bg-zinc-200 overflow-hidden flex-shrink-0 relative border border-zinc-200 dark:border-zinc-800">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={room.product.images[0]} alt="thumb" className="w-full h-full object-cover" />
+      {room.product && (() => {
+        const product = room.product as any;
+        return (
+          <div className="flex items-center justify-between p-3 bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 gap-3">
+            <Link href={`/products/${product.id}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity flex-1 min-w-0">
+              {product.images?.[0] && (
+                <div className="w-12 h-12 rounded-lg bg-zinc-200 overflow-hidden flex-shrink-0 relative border border-zinc-200 dark:border-zinc-800">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={product.images[0]} alt="thumb" className="w-full h-full object-cover" />
+                </div>
+              )}
+              <div className="flex-1 min-w-0">
+                <div className="text-sm text-zinc-900 dark:text-white font-medium truncate">
+                  {product.title}
+                </div>
+                <div className="text-sm font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+                  {product.price.toLocaleString()}원
+                  {product.status === 'reserved' && <span className="text-xs text-emerald-500 bg-emerald-50 dark:bg-emerald-500/10 px-1.5 py-0.5 rounded">예약중</span>}
+                </div>
               </div>
+            </Link>
+            {seller?.id === user.id && (
+              <TransactionControls 
+                productId={product.id} 
+                currentStatus={product.status || 'available'} 
+              />
             )}
-            <div className="flex-1 min-w-0">
-              <div className="text-sm text-zinc-900 dark:text-white font-medium truncate">
-                {room.product.title}
-              </div>
-              <div className="text-sm font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-                {room.product.price.toLocaleString()}원
-                {room.product.status === 'reserved' && <span className="text-xs text-emerald-500 bg-emerald-50 dark:bg-emerald-500/10 px-1.5 py-0.5 rounded">예약중</span>}
-              </div>
-            </div>
-          </Link>
-          {room.seller?.id === user.id && (
-            <TransactionControls 
-              productId={room.product.id} 
-              currentStatus={room.product.status || 'available'} 
-            />
-          )}
-        </div>
-      )}
+          </div>
+        );
+      })()}
 
       {/* 클라이언트 컴포넌트 (실시간 채팅 로직) */}
       <ChatClient 

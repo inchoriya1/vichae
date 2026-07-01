@@ -101,7 +101,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
       .order('created_at', { ascending: false })
       .limit(6);
       
-    searchWords.forEach(w => {
+    searchWords.forEach((w: string) => {
       query = query.ilike('title', `%${w}%`);
     });
 

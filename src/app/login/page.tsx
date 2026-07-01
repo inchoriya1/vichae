@@ -3,7 +3,6 @@
 import { useState, Suspense, useEffect } from 'react';
 import Link from 'next/link';
 import { login, signup, loginWithGoogle } from './actions';
-import { isRedirectError } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 
 function LoginContent() {
@@ -33,7 +32,7 @@ function LoginContent() {
         setErrorMsg(result.error);
       }
     } catch (err: any) {
-      if (isRedirectError(err)) {
+      if (err?.message === 'NEXT_REDIRECT' || err?.digest?.startsWith('NEXT_REDIRECT')) {
         throw err;
       }
       console.error('Submit error:', err);
@@ -145,7 +144,7 @@ function LoginContent() {
             </div>
 
             <div className="mt-6">
-              <form action={loginWithGoogle}>
+              <form action={loginWithGoogle as any}>
                 <button
                   type="submit"
                   className="w-full flex justify-center items-center gap-3 py-3 px-4 border border-zinc-300 dark:border-zinc-700 rounded-xl shadow-sm bg-white dark:bg-zinc-800 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-all active:scale-[0.98]"

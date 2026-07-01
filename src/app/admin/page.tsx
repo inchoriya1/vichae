@@ -111,7 +111,7 @@ export default async function AdminDashboardPage() {
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <form action={deleteProductByAdmin.bind(null, product.id)}>
+                    <form action={deleteProductByAdmin.bind(null, product.id) as any}>
                       <button 
                         type="submit"
                         className="inline-flex items-center justify-center px-3 py-1.5 text-xs font-bold text-white bg-rose-500 hover:bg-rose-600 rounded-lg transition-colors active:scale-95"
