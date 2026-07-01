@@ -25,23 +25,25 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h3 className="text-sm font-semibold text-zinc-900 dark:text-white mb-3">바로가기</h3>
-            <div className="flex flex-col gap-2">
-              <Link href="/products" className="text-sm text-zinc-500 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">곳간 채우기</Link>
-              <Link href="/sell" className="text-sm text-zinc-500 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">판매하기</Link>
-              <Link href="/login" className="text-sm text-zinc-500 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">로그인</Link>
+          <div className="grid grid-cols-2 gap-8 md:col-span-2">
+            {/* Quick Links */}
+            <div>
+              <h3 className="text-sm font-semibold text-zinc-900 dark:text-white mb-3">바로가기</h3>
+              <div className="flex flex-col gap-2">
+                <Link href="/products" className="text-sm text-zinc-500 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">곳간 채우기</Link>
+                <Link href="/sell" className="text-sm text-zinc-500 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">판매하기</Link>
+                <Link href="/login" className="text-sm text-zinc-500 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">로그인</Link>
+              </div>
             </div>
-          </div>
 
-          {/* Info */}
-          <div>
-            <h3 className="text-sm font-semibold text-zinc-900 dark:text-white mb-3">고객지원</h3>
-            <div className="flex flex-col gap-2">
-              <span className="text-sm text-zinc-500 dark:text-zinc-400">이용약관</span>
-              <span className="text-sm text-zinc-500 dark:text-zinc-400">개인정보처리방침</span>
-              <span className="text-sm text-zinc-500 dark:text-zinc-400">문의하기</span>
+            {/* Info */}
+            <div>
+              <h3 className="text-sm font-semibold text-zinc-900 dark:text-white mb-3">고객지원</h3>
+              <div className="flex flex-col gap-2">
+                <span className="text-sm text-zinc-500 dark:text-zinc-400">이용약관</span>
+                <span className="text-sm text-zinc-500 dark:text-zinc-400">개인정보처리방침</span>
+                <span className="text-sm text-zinc-500 dark:text-zinc-400">문의하기</span>
+              </div>
             </div>
           </div>
         </div>

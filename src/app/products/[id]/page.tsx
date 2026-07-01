@@ -8,7 +8,53 @@ import { notFound } from 'next/navigation';
 import ProductActions from './ProductActions';
 import ReviewModal from './ReviewModal';
 
+import { Metadata } from 'next';
+
 export const revalidate = 0;
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const supabase = await createClient();
+  const { data: product } = await supabase
+    .from('products')
+    .select('title, description, price, images')
+    .eq('id', id)
+    .single();
+
+  if (!product) {
+    return {
+      title: '상품을 찾을 수 없습니다 | ViChae',
+    };
+  }
+
+  const imageUrl = product.images?.[0] || 'https://vichae.vercel.app/og-default.jpg';
+
+  return {
+    title: `${product.title} | ViChae`,
+    description: `${product.price.toLocaleString()}원 - ${product.description?.slice(0, 100) || '상품 설명이 없습니다.'}`,
+    openGraph: {
+      title: `${product.title} - ViChae`,
+      description: `${product.price.toLocaleString()}원 - ${product.description?.slice(0, 100) || ''}`,
+      url: `https://vichae.vercel.app/products/${id}`,
+      siteName: 'ViChae',
+      images: [
+        {
+          url: imageUrl,
+          width: 800,
+          height: 600,
+          alt: product.title,
+        },
+      ],
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${product.title} - ViChae`,
+      description: `${product.price.toLocaleString()}원`,
+      images: [imageUrl],
+    },
+  };
+}
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

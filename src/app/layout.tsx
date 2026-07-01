@@ -18,6 +18,22 @@ export const metadata: Metadata = {
   title: "ViChae | 비우고채우고 - 중고거래 플랫폼",
   description: "안 쓰는 물건을 비우고 필요한 물건으로 채우는 중고거래 플랫폼. 합리적인 중고 라이프를 시작하세요.",
   keywords: ["중고거래", "중고마켓", "비우고채우고", "ViChae"],
+  openGraph: {
+    title: "ViChae | 비우고채우고",
+    description: "안 쓰는 물건을 비우고 필요한 물건으로 채우는 중고거래 플랫폼. 합리적인 중고 라이프를 시작하세요.",
+    url: "https://vichae.vercel.app",
+    siteName: "ViChae",
+    images: [
+      {
+        url: "https://vichae.vercel.app/og-default.jpg", // 기본 OG 이미지 (추후 추가 가능)
+        width: 1200,
+        height: 630,
+        alt: "ViChae 커버 이미지",
+      },
+    ],
+    locale: "ko_KR",
+    type: "website",
+  },
 };
 
 import { createClient } from '@/utils/supabase/server';
